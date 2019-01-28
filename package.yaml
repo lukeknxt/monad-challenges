@@ -1,0 +1,31 @@
+name: monad-challenges
+version: 0.1.0.0
+github: lukeknoot/monad-challenges
+license: BSD3
+author: lukeknoot
+maintainer: lukeknoot
+copyright: 2019 lukeknoot
+extra-source-files:
+  - README.md
+  - ChangeLog.md
+description: >-
+  Please see the README on GitHub at
+  <https://github.com/githubuser/monad-challenges#readme>
+dependencies:
+  - base >= 4.7 && < 5
+  - bytestring
+library:
+  source-dirs: src
+tests:
+  monad-challenges-test:
+    main: Spec.hs
+    source-dirs: test
+    ghc-options:
+      - '-threaded'
+      - '-rtsopts'
+      - '-with-rtsopts=-N'
+    dependencies:
+      - monad-challenges
+      - hspec
+      - cryptonite
+      - bytestring
