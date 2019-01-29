@@ -12,3 +12,14 @@ fiveRands = [one, two, three, four, five]
   (three, s3) = rand s2
   (four , s4) = rand s3
   (five , _ ) = rand s4
+
+randLetter :: Gen Char
+randLetter s = (toLetter i, s') where (i, s') = rand s
+
+randString3 :: String
+randString3 = [one, two, three]
+  where
+  (one  , s1) = randLetter $ mkSeed 1
+  (two  , s2) = randLetter s1
+  (three, _ ) = randLetter s2
+  
