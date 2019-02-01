@@ -31,3 +31,15 @@ main = hspec $ do
           (i3, s3) = randTen2 $ mkSeed 1
         in 
           product [i, i2, i3] `shouldBe` 189908109902700
+  describe "randPair" $
+    it "should be ('l',282475249) given seed of 1" $
+      let ((c, i), s) = randPair $ mkSeed 1
+      in (c, i) `shouldBe` ('l', 282475249)
+  describe "generalPair" $
+    it "should be the same as randPair given randLetter and rand" $
+      let ((c, i), s) = generalPair randLetter rand $ mkSeed 1
+      in (c, i) `shouldBe` ('l', 282475249)
+  describe "generalPair2" $
+    it "should be the same as generalPair" $
+      let ((c, i), s) = generalPair2 randLetter rand $ mkSeed 1
+      in (c, i) `shouldBe` ('l', 282475249)
