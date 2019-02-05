@@ -78,3 +78,10 @@ repRandom (f:fs) s = (a : l, s')
     (a, b) = f s
     (l, s') = repRandom fs b
     
+genTwo :: Gen a -> (a -> Gen b) -> Gen b
+genTwo ga f s = (f a) s'
+    where
+      (a, s') = ga s
+
+mkGen :: a -> Gen a
+mkGen a s = (a, s)
