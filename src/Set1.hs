@@ -70,3 +70,11 @@ generalB ga gb f s = (f a b, s3)
 
 generalPair2 :: Gen a -> Gen b -> Gen (a, b)
 generalPair2 ga gb = generalB ga gb (,)
+
+repRandom :: [Gen a] -> Gen [a] -- [Seed -> (a, Seed)] -> (Seed -> ([a], Seed))
+repRandom [] s = ([], s)
+repRandom (f:fs) s = (a : l, s')
+  where 
+    (a, b) = f s
+    (l, s') = repRandom fs b
+    

@@ -16,6 +16,8 @@ dependencies:
   - bytestring
 library:
   source-dirs: src
+default-extensions:
+  - NoImplicitPrelude
 tests:
   monad-challenges-test:
     main: Spec.hs
