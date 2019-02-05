@@ -1,7 +1,6 @@
 module Set1Spec where
 
 import           Test.Hspec
-import           Control.Exception              ( evaluate )
 import           Set1
 import           MCPrelude
 import           Crypto.Hash
