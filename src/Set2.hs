@@ -39,3 +39,18 @@ minimumMay :: Ord a => [a] -> Maybe a
 minimumMay []           = Nothing
 minimumMay [x         ] = Just x
 minimumMay (x : y : xs) = minimumMay ((if x <= y then x else y) : xs)
+
+queryGreek :: GreekData -> String -> Maybe Double
+queryGreek gd s = case lookupMay s gd of
+  (Just xs) -> 
+    case tailMay xs of
+    (Just tail) -> 
+      case maximumMay tail of
+      (Just max) ->
+        case headMay xs of
+          (Just head) -> 
+            divMay (fromIntegral max) (fromIntegral head)
+          Nothing -> Nothing
+      Nothing -> Nothing
+    Nothing -> Nothing
+  Nothing -> Nothing
