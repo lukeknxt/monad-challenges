@@ -54,3 +54,18 @@ queryGreek gd s = case lookupMay s gd of
       Nothing -> Nothing
     Nothing -> Nothing
   Nothing -> Nothing
+
+chain :: (a -> Maybe b) -> Maybe a -> Maybe b
+chain f a = case a of 
+  (Just x) -> f x
+  Nothing -> Nothing
+
+link :: Maybe a -> (a -> Maybe b) -> Maybe b
+link = flip chain 
+
+queryGreek2 :: GreekData -> String -> Maybe Double
+queryGreek2 gd s = 
+  link (lookupMay s gd) (\xs -> 
+   link (tailMay xs) (\tail -> 
+    link (maximumMay tail) (\max -> 
+     link (headMay xs) (\head -> divMay (fromIntegral max) (fromIntegral head)))))

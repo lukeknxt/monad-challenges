@@ -48,7 +48,7 @@ spec = do
       shouldBe (minimumMay [1]) $ Just 1
     it "should handle multi-element list" $ 
       shouldBe (minimumMay [1, 2]) $ Just 1
-  describe "queryGreek" $ do
+  describe "queryGreek" $
     it "should cover provided test cases" $ do
       queryGreek greekDataA "alpha" `shouldBe` Just 2.0
       queryGreek greekDataA "beta" `shouldBe` Nothing
@@ -60,3 +60,15 @@ spec = do
       queryGreek greekDataB "chi" `shouldBe` Just 9.095238095238095
       queryGreek greekDataB "psi" `shouldBe` Nothing
       queryGreek greekDataB "omega" `shouldBe` Just 24.0
+  describe "queryGreek2" $
+    it "should be equivalent to queryGreek" $ do
+      queryGreek2 greekDataA "alpha" `shouldBe` Just 2.0
+      queryGreek2 greekDataA "beta" `shouldBe` Nothing
+      queryGreek2 greekDataA "gamma" `shouldBe` Just 3.3333333333333335
+      queryGreek2 greekDataA "delta" `shouldBe` Nothing
+      queryGreek2 greekDataA "zeta" `shouldBe` Nothing
+      queryGreek2 greekDataB "rho" `shouldBe` Nothing
+      queryGreek2 greekDataB "phi" `shouldBe` Just 0.24528301886792453
+      queryGreek2 greekDataB "chi" `shouldBe` Just 9.095238095238095
+      queryGreek2 greekDataB "psi" `shouldBe` Nothing
+      queryGreek2 greekDataB "omega" `shouldBe` Just 24.0 
