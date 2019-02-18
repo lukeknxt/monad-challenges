@@ -72,3 +72,15 @@ spec = do
       queryGreek2 greekDataB "chi" `shouldBe` Just 9.095238095238095
       queryGreek2 greekDataB "psi" `shouldBe` Nothing
       queryGreek2 greekDataB "omega" `shouldBe` Just 24.0 
+  describe "addSalaries" $ do
+    it "should return Just if both people exist" $ 
+      addSalaries salaries "alice" "bob" `shouldBe` Just 195000
+    it "should return Nothing if at least one person doesn't exist" $ do
+      addSalaries salaries "alice" "b" `shouldBe` Nothing
+      addSalaries salaries "a" "b" `shouldBe` Nothing
+  describe "addSalaries2" $ do
+    it "should return Just if both people exist" $ 
+      addSalaries2 salaries "alice" "bob" `shouldBe` Just 195000
+    it "should return Nothing if at least one person doesn't exist" $ do
+      addSalaries2 salaries "alice" "b" `shouldBe` Nothing
+      addSalaries2 salaries "a" "b" `shouldBe` Nothing

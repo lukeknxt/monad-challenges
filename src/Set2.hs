@@ -42,30 +42,50 @@ minimumMay (x : y : xs) = minimumMay ((if x <= y then x else y) : xs)
 
 queryGreek :: GreekData -> String -> Maybe Double
 queryGreek gd s = case lookupMay s gd of
-  (Just xs) -> 
-    case tailMay xs of
-    (Just tail) -> 
-      case maximumMay tail of
-      (Just max) ->
-        case headMay xs of
-          (Just head) -> 
-            divMay (fromIntegral max) (fromIntegral head)
-          Nothing -> Nothing
+  (Just xs) -> case tailMay xs of
+    (Just tail) -> case maximumMay tail of
+      (Just max) -> case headMay xs of
+        (Just head) -> divMay (fromIntegral max) (fromIntegral head)
+        Nothing     -> Nothing
       Nothing -> Nothing
     Nothing -> Nothing
   Nothing -> Nothing
 
 chain :: (a -> Maybe b) -> Maybe a -> Maybe b
-chain f a = case a of 
+chain f a = case a of
   (Just x) -> f x
-  Nothing -> Nothing
+  Nothing  -> Nothing
 
 link :: Maybe a -> (a -> Maybe b) -> Maybe b
-link = flip chain 
+link = flip chain
 
 queryGreek2 :: GreekData -> String -> Maybe Double
-queryGreek2 gd s = 
-  link (lookupMay s gd) (\xs -> 
-   link (tailMay xs) (\tail -> 
-    link (maximumMay tail) (\max -> 
-     link (headMay xs) (\head -> divMay (fromIntegral max) (fromIntegral head)))))
+queryGreek2 gd s = link
+  (lookupMay s gd)
+  (\xs -> link
+    (tailMay xs)
+    (\tail -> link
+      (maximumMay tail)
+      (\max -> link (headMay xs)
+                    (\head -> divMay (fromIntegral max) (fromIntegral head))
+      )
+    )
+  )
+
+addSalaries :: [(String, Integer)] -> String -> String -> Maybe Integer
+addSalaries salaries person1 person2 = case lookupMay person1 salaries of
+  (Just p1Salary) -> case lookupMay person2 salaries of
+    (Just p2Salary) -> Just $ p1Salary + p2Salary
+    Nothing         -> Nothing
+  Nothing -> Nothing
+
+mkMaybe :: a -> Maybe a
+mkMaybe = Just 
+
+ylink :: (a -> b -> c) -> Maybe a -> Maybe b -> Maybe c
+ylink f ma mb = link ma (\a -> link mb (\b -> mkMaybe (f a b)))
+
+addSalaries2 :: [(String, Integer)] -> String -> String -> Maybe Integer
+addSalaries2 salaries person1 person2 = 
+  ylink (+) (lookupMay person1 salaries) (lookupMay person2 salaries)
+
