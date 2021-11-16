@@ -1,30 +1,30 @@
 {-# LANGUAGE MonadComprehensions #-}
-{-# LANGUAGE RebindableSyntax  #-}
+{-# LANGUAGE RebindableSyntax #-}
 
 module Set1 where
 
-import           MCPrelude
+import MCPrelude
 
 type Gen a = Seed -> (a, Seed)
 
 fiveRands :: [Integer]
 fiveRands = [one, two, three, four, five]
- where
-  (one  , s1) = rand $ mkSeed 1
-  (two  , s2) = rand s1
-  (three, s3) = rand s2
-  (four , s4) = rand s3
-  (five , _ ) = rand s4
+  where
+    (one, s1) = rand $ mkSeed 1
+    (two, s2) = rand s1
+    (three, s3) = rand s2
+    (four, s4) = rand s3
+    (five, _) = rand s4
 
 randLetter :: Gen Char
 randLetter s = (toLetter i, s') where (i, s') = rand s
 
 randString3 :: String
 randString3 = [one, two, three]
- where
-  (one  , s1) = randLetter $ mkSeed 1
-  (two  , s2) = randLetter s1
-  (three, _ ) = randLetter s2
+  where
+    (one, s1) = randLetter $ mkSeed 1
+    (two, s2) = randLetter s1
+    (three, _) = randLetter s2
 
 randEven :: Gen Integer
 randEven = generalA (* 2)
@@ -52,36 +52,36 @@ generalA2 l r s = (l i, s') where (i, s') = r s
 
 randPair :: Gen (Char, Integer)
 randPair s = ((c, i), s3)
- where
-  (c, s2) = randLetter s
-  (i, s3) = rand s2
+  where
+    (c, s2) = randLetter s
+    (i, s3) = rand s2
 
 generalPair :: Gen a -> Gen b -> Gen (a, b)
 generalPair ga gb s = ((a, b), s3)
- where
-  (a, s2) = ga s
-  (b, s3) = gb s2
+  where
+    (a, s2) = ga s
+    (b, s3) = gb s2
 
 generalB :: Gen a -> Gen b -> (a -> b -> c) -> Gen c
 generalB ga gb f s = (f a b, s3)
- where
-  (a, s2) = ga s
-  (b, s3) = gb s2
+  where
+    (a, s2) = ga s
+    (b, s3) = gb s2
 
 generalPair2 :: Gen a -> Gen b -> Gen (a, b)
 generalPair2 ga gb = generalB ga gb (,)
 
 repRandom :: [Gen a] -> Gen [a] -- [Seed -> (a, Seed)] -> (Seed -> ([a], Seed))
 repRandom [] s = ([], s)
-repRandom (f:fs) s = (a : l, s')
-  where 
+repRandom (f : fs) s = (a : l, s')
+  where
     (a, b) = f s
     (l, s') = repRandom fs b
-    
+
 genTwo :: Gen a -> (a -> Gen b) -> Gen b
-genTwo ga f s = (f a) s'
-    where
-      (a, s') = ga s
+genTwo ga f s = f a s'
+  where
+    (a, s') = ga s
 
 mkGen :: a -> Gen a
 mkGen a s = (a, s)
