@@ -29,7 +29,7 @@ lookupMay a l = lookupMay a (filter (\(one, two) -> one == a) l)
 divMay :: (Eq a, Fractional a) => a -> a -> Maybe a
 divMay x y
   | y == 0 = Nothing
-           | otherwise = Just $ x / y
+  | otherwise = Just $ x / y
 
 maximumMay :: Ord a => [a] -> Maybe a
 maximumMay [] = Nothing
@@ -63,20 +63,20 @@ link = flip chain
 queryGreek2 :: GreekData -> String -> Maybe Double
 queryGreek2 gd s =
   link
-  (lookupMay s gd)
+    (lookupMay s gd)
     ( \xs ->
         link
-    (tailMay xs)
+          (tailMay xs)
           ( \tail ->
               link
-      (maximumMay tail)
+                (maximumMay tail)
                 ( \max ->
                     link
                       (headMay xs)
                       (divMay (fromIntegral max) . fromIntegral)
-      )
+                )
+          )
     )
-  )
 
 addSalaries :: [(String, Integer)] -> String -> String -> Maybe Integer
 addSalaries salaries person1 person2 = case lookupMay person1 salaries of
@@ -86,12 +86,36 @@ addSalaries salaries person1 person2 = case lookupMay person1 salaries of
   Nothing -> Nothing
 
 mkMaybe :: a -> Maybe a
-mkMaybe = Just 
+mkMaybe = Just
 
 ylink :: (a -> b -> c) -> Maybe a -> Maybe b -> Maybe c
 ylink f ma mb = link ma (\a -> link mb (mkMaybe . f a))
 
 addSalaries2 :: [(String, Integer)] -> String -> String -> Maybe Integer
-addSalaries2 salaries person1 person2 = 
+addSalaries2 salaries person1 person2 =
   ylink (+) (lookupMay person1 salaries) (lookupMay person2 salaries)
 
+tailProd :: Num a => [a] -> Maybe a
+tailProd [] = Nothing
+tailProd [x] = Just 1
+tailProd (x : xs) = Just $ foldl (*) 1 xs
+
+tailSum :: Num a => [a] -> Maybe a
+tailSum [] = Nothing
+tailSum [x] = Just 1
+tailSum (x : xs) = Just $ foldl (+) 0 xs
+
+transMaybe :: Num a => [a] -> (a -> a -> a) -> Maybe a
+transMaybe [] f = Nothing
+transMaybe [x] f = Just 1
+transMaybe (x : xs) f = Just $ foldl f 0 xs
+
+tailMax :: Ord a => [a] -> Maybe (Maybe a)
+tailMax xs = Just $ maximumMay xs
+
+tailMin :: Ord a => [a] -> Maybe (Maybe a)
+tailMin xs = Just $ minimumMay xs
+
+combine :: Maybe (Maybe a) -> Maybe a
+combine (Just a) = a
+combine Nothing = Nothing
